@@ -7,6 +7,7 @@ const Navbar = () => {
 
     const logout = () => {
         aToken && setAToken('')
+        aToken && localStorage.removeItem('aToken')
     }
   return (
     <div className='flex justify-between items-center px-4 sm:px-10 py-3 border-b bg-white'>
@@ -14,7 +15,7 @@ const Navbar = () => {
             <img className='w-36 sm:w-40 cursor-pointer' src={assets.admin_logo} alt="" />
             <p className='border px-2.5 py-0.5 rounded-full border-gray-500 text-gray-600'>{aToken? 'Admin': 'Doctor'}</p>
         </div>
-        <button className='bg-primary text-white text-sm px-10 py-2 rounded-full cursor-pointer'>Logout</button>
+        <button onClick={logout} className='bg-primary text-white text-sm px-10 py-2 rounded-full cursor-pointer'>Logout</button>
     </div>
   )
 }
