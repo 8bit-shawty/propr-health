@@ -51,12 +51,22 @@ const AddDoctor = () => {
 
       if (data.success) {
         toast.success(data.message)
+        setDocImg(false)
+        setName('')
+        setPassword('')
+        setEmail('')
+        setAddress1('')
+        setAddress2('')
+        setDegree('')
+        setAbout('')
+        setFees('')
       }else{
         toast.error(data.message)
       }
 
     } catch (error) {
-      
+      toast.error(error.message)
+      console.log(error)
     }
   }
 
@@ -98,8 +108,8 @@ const AddDoctor = () => {
               <select onChange={(e)=>setExperience(e.target.value)} value={experience} className="border rounded px-3 py-2" name="" id="">
                 <option value="1 Year">1 Year</option>
                 <option value="2 Year">2 Years</option>
-                <option value="4 Year">4 Years</option>
                 <option value="3 Year">3 Years</option>
+                <option value="4 Year">4 Years</option>
                 <option value="5 Year">5 Years</option>
                 <option value="6 Year">6 Years</option>
                 <option value="7 Year">7 Years</option>
