@@ -4,6 +4,8 @@ import { assets } from "../../assets/assets";
 import {AdminContext} from '../../context/AdminContext'
 import {toast} from 'react-toastify'
 
+import axios from 'axios'
+
 const AddDoctor = () => {
   const[docImg,setDocImg]=useState(false)
   const[name,setName]=useState('')
@@ -26,6 +28,33 @@ const AddDoctor = () => {
       if (!docImg) {
         return toast.error('Image Not Selected.')
       }
+
+      const formData = new FormData()
+      formData.append('image', docImg)
+      formData.append('name', name)
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('experience', experience)
+      formData.append('fees', Number(fees))
+      formData.append('about', about)
+      formData.append('speciality', speciality)
+      formData.append('degree', degree)
+      formData.append('address', JSON.stringify({line1:address1,line2:address2}))
+
+      //console log form data
+      formData.forEach((value, key) => {
+        console.log(`${key} : ${value}`)
+      })
+
+      //make call to API on backend to store doctor into DB
+      const {data} = await axios.post(backendUrl + '/api/admin/add-doctor', formData, {headers:{aToken}})
+
+      if (data.success) {
+        toast.success(data.message)
+      }else{
+        toast.error(data.message)
+      }
+
     } catch (error) {
       
     }
