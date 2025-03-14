@@ -93,4 +93,13 @@ const allDoctors = async(req, res) => {
     }
 }
 
+//API to get all appointments list
+const appointmentsAdmin = async (req,res) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
 export {addDoctor, loginAdmin, allDoctors}

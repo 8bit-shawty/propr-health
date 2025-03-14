@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
 import appointmentModel from '../models/appointmentModel.js'
+// import Stripe from 'stripe'
+import razorpay from 'razorpay'
 
 //API to register user
 const registerUser = async(req, res) => {
@@ -211,4 +213,146 @@ const cancelAppointment = async (req,res) => {
     }
 }
 
-export {registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment}
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// // API to make payment for appointment using Stripe
+// const paymentStripe = async (req,res) => {
+//     try {
+//         const{amount} = req.body
+//         if(!amount){
+            
+//         }
+//     } catch (error) {
+//         console.log(error)
+//         res.json({success:false,message:error.message})
+//     }
+// }
+
+
+//RAZORPAY
+const razorpayInstance = new razorpay({
+    key_id:process.env.RAZORPAY_KEY_ID,
+    key_secret:process.env.RAZORPAY_KEY_SECRET
+})
+//API to make payment for appointment using Razorpay
+const paymentRazorPay = async (req, res) => {
+
+    try {
+        const { appointmentId } = req.body
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        if (!appointmentData || appointmentData.cancelled) {
+            return res.json({ success: false, message: "Appointment Cancelled or not found." })
+        }
+
+        //Creating options for razorpay payment
+        const options = {
+            amount: appointmentData.amount * 100,
+            currency: process.env.CURRENCY,
+            receipt: appointmentId
+        }
+
+        //Creation of an order
+        const order = await razorpayInstance.orders.create(options)
+        res.json({ success: true, order })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+//API to verify payment of razorpay
+const verifyRazorpay = async (req,res) => {
+    try {
+        const{razorpay_order_id} = req.body
+        const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
+
+        // console.log(orderInfo)
+
+        if (orderInfo.status === 'paid') {
+            await appointmentModel.findByIdAndUpdate(orderInfo.receipt,{payment:true})
+            res.json({success:true,message:"Payment Successful."})
+        }else{
+            res.json({success:false,message:"Payment failed."})
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+//STRIPE
+// API to make payment for appointment using Stripe
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// const paymentStripe = async (req, res) => {
+//     try {
+//         const { appointmentId } = req.body;
+//         const appointmentData = await appointmentModel.findById(appointmentId);
+
+//         if (!appointmentData || appointmentData.cancelled) {
+//             return res.json({ success: false, message: 'Appointment Cancelled or not found.' });
+//         }
+
+//         const session = await stripe.checkout.sessions.create({
+//             payment_method_types: ['card'],
+//             mode: 'payment',
+//             line_items: [{
+//                 price_data: {
+//                     currency: 'usd',
+//                     product_data: {
+//                         name: 'Doctor Appointment',
+//                     },
+//                     unit_amount: appointmentData.amount * 100,
+//                 },
+//                 quantity: 1,
+//             }],
+//             metadata: { appointmentId },
+//             success_url: `${process.env.FRONTEND_URL}/success`,
+//             cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+//         });
+
+//         res.json({ success: true, sessionId: session.id });
+//     } catch (error) {
+//         console.log(error);
+//         res.json({ success: false, message: error.message });
+//     }
+// };
+
+// // API to verify payment from Stripe webhook
+// const verifyStripePayment = async (req, res) => {
+//     const sig = req.headers['stripe-signature'];
+
+//     try {
+//         const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+
+//         if (event.type === 'checkout.session.completed') {
+//             const session = event.data.object;
+//             const appointmentId = session.metadata.appointmentId;
+
+//             const appointment = await appointmentModel.findByIdAndUpdate(
+//                 appointmentId, 
+//                 { payment: true },
+//                 { new: true }  // Returns the updated appointment
+//             );
+
+//             if (!appointment) {
+//                 return res.status(404).json({ success: false, message: 'Appointment not found.' });
+//             }
+
+//             res.json({ success: true, message: "Payment Successful.", appointment });
+//         }
+//     } catch (error) {
+//         console.error("Error verifying Stripe payment:", error.message);
+//         res.status(400).send(`Webhook Error: ${error.message}`);
+//     }
+// };
+
+export {registerUser, 
+    loginUser, 
+    getProfile, updateProfile, bookAppointment, 
+    listAppointment, cancelAppointment, 
+    paymentRazorPay,
+    verifyRazorpay,
+    // paymentStripe,
+    // verifyStripePayment
+}
