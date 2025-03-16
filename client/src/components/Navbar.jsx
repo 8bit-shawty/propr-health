@@ -36,6 +36,7 @@ const Navbar = () => {
                 <li className='py-1'>CONTACT</li>
                 <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden'/>
             </NavLink>
+            <a href="http://localhost:5174"><button className='py-0.5 px-2 border text-xs rounded-full cursor-pointer'>Admin Panel</button></a>
         </ul>
         <div className='flex items-center gap-4'>
             {
