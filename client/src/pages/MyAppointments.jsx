@@ -104,17 +104,25 @@ const MyAppointments = () => {
   };
 
   const appointmentRazorpay = async (appointmentId) => {
-    try {
-      const { data } = await axios.post(
-        backendUrl + "/api/user/payment-razorpay",
-        { appointmentId },
-        { headers: { token } }
-      );
-      if (data.success) {
-        // console.log(data.order);
-        initPay(data.order);
-      }
-    } catch (error) {}
+    // try {
+    //   const { data } = await axios.post(
+    //     backendUrl + "/api/user/payment-razorpay",
+    //     { appointmentId },
+    //     { headers: { token } }
+    //   );
+    //   if (data.success) {
+    //     // console.log(data.order);
+    //     initPay(data.order);
+    //   }
+    // } catch (error) {}
+    toast.info("Demo mode only. Payment process disabled.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   //STRIPE
@@ -195,7 +203,7 @@ const MyAppointments = () => {
               )}
               {!item.cancelled && !item.payment && !item.isCompleted && (
                 <button
-                  onClick={() => appointmentStripe(item._id)}
+                  onClick={() => appointmentRazorpay(item._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer"
                 >
                   Pay Online

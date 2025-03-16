@@ -17,8 +17,8 @@ userRouter.post('/book-appointment',authUser,bookAppointment)
 userRouter.get('/appointments',authUser,listAppointment)
 userRouter.post('/cancel-appointment',authUser,cancelAppointment)
 //RAZORPAY
-// userRouter.post('/payment-razorpay',authUser,paymentRazorPay)
-// userRouter.post('/verify-razorpay',authUser,verifyRazorpay)
+userRouter.post('/payment-razorpay',authUser,paymentRazorPay)
+userRouter.post('/verify-razorpay',authUser,verifyRazorpay)
 //STRIPE
 // userRouter.post('/payment-stripe', authUser, paymentStripe)
 // userRouter.post('verify-stripe-payment',authUser,verifyStripePayment)
