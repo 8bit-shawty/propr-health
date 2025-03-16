@@ -40,7 +40,7 @@ const Login = () => {
                 }
             }
         } catch (error) {
-            
+            toast.error(error.message)
         }
     }
 
@@ -78,7 +78,7 @@ const Login = () => {
             </form>
 
             {/* User Panel Button */}
-            <a href="http://localhost:5173">
+            <a href="https://propr-health.vercel.app/">
                 <button className='py-1 px-3 border text-xs rounded-full cursor-pointer hover:bg-gray-200 transition'>
                     User Panel
                 </button>
