@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/your-username/propr-health">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/8bit-shawty/propr-health">
+    <img src="./client/src/assets/screenshot1.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Propr-Health</h3>
