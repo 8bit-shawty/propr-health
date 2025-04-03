@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/8bit-shawty/propr-health">
-    <img src="./client/src/assets/screenshot1.png" alt="Logo" width="80" height="80">
+    <img src="./client/src/assets/screenshot1.png" alt="Logo" width='600'>
   </a>
 
   <h3 align="center">Propr-Health</h3>
